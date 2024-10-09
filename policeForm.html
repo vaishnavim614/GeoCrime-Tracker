@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Police Log</title>
+    <link href="C:\Users\princy\Desktop\Brighton\GeoCrime Tracker\CSS_file\polog.css" rel="stylesheet">
+</head>
+<body>
+    <div class="#">
+        <div class="header" id="polog-header"></div>
+        <div class="sidebar" id="polog-sidebar"></div>
+        <h2>Crime Registration</h2>
+        <div class="container" id="polog-container">
+            <!-- Police Log Form -->
+            <form action="/submit" method="POST">
+                <div class="form-group">
+                    <label for="polog-pid">Police ID</label>
+                    <input type="number" id="polog-pid" name="polog_pid" placeholder="Enter your ID" required>
+                </div>
+                <div class="form-group">
+                    <label for="polog-pname">Police Name</label>
+                    <input type="text" id="polog-pname" name="polog_pname" placeholder="Enter your Name" required>
+                </div>
+                <div class="form-group">
+                    <label for="polog-crimetype">Crime Type</label>
+                    <select id="polog-crimetype" name="polog_crimetype" required>
+                        <option value="">Select Type of Crime</option>
+                        <option value="theft">Theft</option>
+                        <option value="assault">Assault</option>
+                        <option value="burglary">Burglary</option>
+                        <option value="fraud">Fraud</option>
+                        <option value="murder">Murder</option>
+                        <option value="drugOffense">Drug Offense</option>
+                        <option value="domesticViolence">Domestic Violence</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="polog-vname">Victim Name</label>
+                    <input type="text" id="polog-vname" name="polog_vname" placeholder="Enter Victim Name" required>
+                </div>
+                <div class="form-group">
+                    <label for="polog-cadhaarnum">Criminal Aadhaar Number</label>
+                    <input type="number" id="polog-cadhaarnum" name="polog_cadhaarnum" placeholder="Enter Criminal Aadhaar Number">
+                </div>
+                <div class="form-group">
+                    <label for="polog-cid">Criminal ID</label>
+                    <input type="number" id="polog-cid" name="polog_cid">
+                </div>
+                <div class="form-group">
+                    <label for="polog-cname">Criminal Name</label>
+                    <input type="text" id="polog-cname" name="polog_cname" placeholder="Enter Criminal Name">
+                </div>
+                <div class="form-group">
+                    <label for="polog-loc">Location</label>
+                    <input type="text" id="polog-loc" name="polog_loc" placeholder="Location of Crime" required>
+                </div>
+                <div class="form-group">
+                    <label for="polog-pincode">Pincode</label>
+                    <input type="number" id="polog-pincode" name="polog_pincode" placeholder="Enter the Pincode" required>
+                </div>
+                <div class="form-group">
+                    <label for="polog-date">Date</label>
+                    <input type="date" id="polog-date" name="polog_date" placeholder="Enter the date" required>
+                </div>
+                <div class="form-group">
+                    <label for="polog-time">Time</label>
+                    <input type="time" id="polog-time" name="polog_time" placeholder="Enter the Time" required>
+                </div>
+                <button type="submit" class="btn">Register</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
