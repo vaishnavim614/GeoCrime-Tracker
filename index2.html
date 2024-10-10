@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIS Crime Analysis Dashboard</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body {
+            display: flex;
+            margin: 0;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        #map {
+            flex: 1; /* Takes up remaining space */
+            height: 100%;
+        }
+        #sidebar {
+            width: 250px;
+            background: #f8f9fa;
+            padding: 15px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            overflow-y: auto; /* Allows scrolling */
+        }
+        #sidebar h2 {
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+        #sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        #sidebar ul li {
+            padding: 10px;
+            cursor: pointer;
+        }
+        #sidebar ul li:hover {
+            background: #e2e6ea;
+        }
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+<div id="sidebar">
+    <h2>Crime Analysis</h2>
+    <ul>
+        <li onclick="showLayer('layer1')">Crime Hotspot Analysis</li>
+        <li onclick="showLayer('layer2')">Predictive Crime Analysis</li>
+        <li onclick="showLayer('layer3')">Incident Mapping</li>
+        <li onclick="showLayer('layer4')">Real-time Alerts</li>
+        <li onclick="showLayer('layer5')">Criminal Behavior Patterns</li>
+    </ul>
+    <h2>Settings</h2>
+    <ul>
+        <li>Profile</li>
+        <li>Settings</li>
+        <li>Help</li>
+        <li>About</li>
+    </ul>
+</div>
+
+<div id="map"></div>
+
+<!-- Leaflet JavaScript -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // Initialize the map and set its view
+    var map = L.map('map').setView([20.5937, 78.9629], 5); // Centered on India
+
+    // Add OpenStreetMap tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Define GeoJSON layers
+    var geojsonLayer1, geojsonLayer2; // Declare layers globally for access
+
+    // Function to style the GeoJSON layers
+    function style1(feature) {
+        return {
+            color: "#ff7800",
+            weight: 2,
+            opacity: 0.65
+        };
+    }
+
+    function style2(feature) {
+        return {
+            color: "#0057e7",
+            weight: 2,
+            opacity: 0.65
+        };
+    }
+
+    // Function to bind popup information for each feature
+    function onEachFeature1(feature, layer) {
+        if (feature.properties && feature.properties.name) {
+            layer.bindPopup("<strong>Crime Hotspot:</strong> " + feature.properties.name);
+        }
+    }
+
+    function onEachFeature2(feature, layer) {
+        if (feature.properties && feature.properties.name) {
+            layer.bindPopup("<strong>Predictive Analysis:</strong> " + feature.properties.name);
+        }
+    }
+
+    // Load GeoJSON files and add data to layers
+    function loadGeoJSON() {
+        geojsonLayer1 = L.geoJSON(null, {
+            style: style1,
+            onEachFeature: onEachFeature1
+        });
+
+        geojsonLayer2 = L.geoJSON(null, {
+            style: style2,
+            onEachFeature: onEachFeature2
+        });
+
+        fetch('Point_Police_Station.geojson')
+            .then(response => response.json())
+            .then(data => {
+                geojsonLayer1.addData(data);
+                geojsonLayer1.addTo(map); // Add layer to map
+            })
+            .catch(error => console.error('Error loading GeoJSON 1:', error));
+
+        fetch('Police_Station_Jurdition.geojson')
+            .then(response => response.json())
+            .then(data => {
+                geojsonLayer2.addData(data);
+                // Do not add to map initially
+            })
+            .catch(error => console.error('Error loading GeoJSON 2:', error));
+    }
+
+    // Function to show specific layer based on sidebar click
+    function showLayer(layer) {
+        if (layer === 'layer1') {
+            if (map.hasLayer(geojsonLayer2)) {
+                map.removeLayer(geojsonLayer2);
+            }
+            map.addLayer(geojsonLayer1);
+        } else if (layer === 'layer2') {
+            if (map.hasLayer(geojsonLayer1)) {
+                map.removeLayer(geojsonLayer1);
+            }
+            map.addLayer(geojsonLayer2);
+        } else {
+            // Handle other layers similarly if you have them
+            alert("This layer is not implemented yet.");
+        }
+    }
+
+    // Load GeoJSON on page load
+    loadGeoJSON();
+
+    // Layer control to toggle layers
+    var baseMaps = {
+        "Crime Hotspot Analysis": geojsonLayer1,
+        "Predictive Crime Analysis": geojsonLayer2
+    };
+
+    // Add layer control with collapsed option set to true
+    L.control.layers(null, baseMaps, { collapsed: true }).addTo(map);
+</script>
+
+</body>
+</html>

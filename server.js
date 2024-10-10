@@ -1,10 +1,14 @@
 const express = require('express');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const app = express();
 
 // Middleware to parse the incoming form data
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// app.use(express.static(path.join(__dirname)));
 
 // Connect to MySQL database
 const db = mysql.createConnection({
