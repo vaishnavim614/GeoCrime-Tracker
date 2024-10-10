@@ -5,7 +5,15 @@ const cors = require('cors');
 const app = express();
 
 // Middleware to parse the incoming form data
-app.use(cors());
+
+
+// Allow cross-origin requests
+app.use(cors({
+    origin: '*',  // Allow requests from your form's origin
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type']
+}));
+app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // app.use(express.static(path.join(__dirname)));
@@ -31,25 +39,34 @@ app.post('/submit', (req, res) => {
     const {
         polog_pid,
         polog_pname,
+
         polog_crimetype,
-        polog_vname,
-        polog_cadhaarnum,
-        polog_cid,
-        polog_cname,
+        polog_crimedesc,
         polog_loc,
         polog_pincode,
         polog_date,
-        polog_time
+        polog_time,
+
+        polog_vname,
+        polog_vphone,
+        polog_vaddress,
+
+        polog_cadhaarnum,
+        polog_cid,
+        polog_cname,
+        
+        
     } = req.body;
 
     // Handle empty fields for aadhaar and other numeric fields
+    const description = polog_crimedesc === '' ? null : polog_crimedesc;
     const aadhaar = polog_cadhaarnum === '' ? null : polog_cadhaarnum;
     const cid = polog_cid === '' ? null : polog_cid;
     const cname = polog_cname ==='' ? null : polog_cname;
 
-    const sql = 'INSERT INTO crimes (police_id, police_name, crime_type, victim_name, criminal_aadhaar, criminal_id, criminal_name, location, pincode, date, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const sql = 'INSERT INTO crimes (police_id, police_name, crime_type, crime_dec,location, pincode, date, time,victim_name, victim_no , victim_add , criminal_aadhaar, criminal_id, criminal_name ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
-    db.query(sql, [polog_pid, polog_pname, polog_crimetype, polog_vname, aadhaar, cid, cname, polog_loc, polog_pincode, polog_date, polog_time], (err, result) => {
+    db.query(sql, [polog_pid, polog_pname, polog_crimetype,description, polog_loc, polog_pincode, polog_date, polog_time , polog_vname,polog_vphone,polog_vaddress, aadhaar, cid, cname ], (err, result) => {
         if (err) {
             console.log('Error inserting data:', err);
             res.send('Failed to register crime');
@@ -58,6 +75,34 @@ app.post('/submit', (req, res) => {
         }
     });
 });
+
+// Handle criminal Aadhaar number check
+app.post('/check-criminal', (req, res) => {
+    const aadhaarNumber = req.body.aadhaar;
+    console.log('Received Aadhaar Number:', aadhaarNumber); // Log the Aadhaar number
+
+    const sql = 'SELECT criminal_id, criminal_name FROM crimes WHERE criminal_aadhaar = ?';
+    db.query(sql, [aadhaarNumber], (err, results) => {
+        if (err) {
+            console.log('Error checking criminal:', err);
+            return res.status(500).json({ error: 'Server error' });
+
+        }
+        console.log('SQL Results:', results); // Log the results from the query
+        if (results.length > 0) {
+            // Criminal found
+            res.json({
+                found: true,
+                id: results[0].criminal_id,   // Make sure to reference criminal_id
+                name: results[0].criminal_name
+            });
+        } else {
+            // Criminal not found
+            res.json({ found: false });
+        }
+    });
+});
+
 
 
 // Serve the form
