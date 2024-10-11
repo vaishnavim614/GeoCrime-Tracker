@@ -69,9 +69,9 @@ app.post('/submit', (req, res) => {
     db.query(sql, [polog_pid, polog_pname, polog_crimetype,description, polog_loc, polog_pincode, polog_date, polog_time , polog_vname,polog_vphone,polog_vaddress, aadhaar, cid, cname ], (err, result) => {
         if (err) {
             console.log('Error inserting data:', err);
-            res.send('Failed to register crime');
+            return res.status(500).json({ message: 'Failed to register crime' });
         } else {
-            res.send('Crime registered successfully!');
+            return res.status(200).json({ message: 'Crime registered successfully!' });
         }
     });
 });
