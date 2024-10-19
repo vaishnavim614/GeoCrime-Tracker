@@ -79,3 +79,333 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Police Log</title>
+    <link href="C:\Users\princy\Desktop\Brighton\GeoCrime Tracker\CSS_file\polog.css" rel="stylesheet">
+    <style>
+        /* Basic styles for the body and container */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        /* Styles for the form elements */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="time"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Ensures padding is included in the width */
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        input[type="time"]:focus,
+        input[type="tel"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #007BFF; /* Change border color on focus */
+            outline: none; /* Remove default outline */
+        }
+
+        fieldset {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px; /* Space between fieldsets */
+        }
+
+        summary {
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 10px;
+            color: #007BFF; /* Color for the summary title */
+        }
+
+        summary:hover {
+            text-decoration: underline; /* Underline effect on hover */
+        }
+
+        .btn {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%; /* Full width */
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="#">
+        <div class="header" id="polog-header"></div>
+        <div class="sidebar" id="polog-sidebar"></div>
+        <h2>Crime Registration</h2>
+        <div class="container" id="polog-container">
+            <!-- Police Log Form -->
+            <form action="http://localhost:3000/submit" method="POST" id="crime-form">
+                <!-- Police Information Section -->
+                <fieldset>
+                    <legend>Police Information</legend>
+                    <div class="form-group">
+                        <label for="polog-pid">Police ID</label>
+                        <input type="number" id="polog-pid" name="polog_pid" placeholder="Enter your ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="polog-pname">Police Name</label>
+                        <input type="text" id="polog-pname" name="polog_pname" placeholder="Enter your Name" required>
+                    </div>
+                </fieldset>
+
+                <!-- Crime Information Section -->
+                <details class="toggle-section">
+                    <summary>Crime Information</summary>
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="polog-crimetype">Crime Type</label>
+                            <select id="polog-crimetype" name="polog_crimetype" required>
+                                <option value="">Select Type of Crime</option>
+                                <option value="theft">Theft</option>
+                                <option value="assault">Assault</option>
+                                <option value="burglary">Burglary</option>
+                                <option value="fraud">Fraud</option>
+                                <option value="murder">Murder</option>
+                                <option value="drugOffense">Drug Offense</option>
+                                <option value="domesticViolence">Domestic Violence</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="polog-crimedesc">Crime Description</label>
+                            <textarea id="polog-crimedesc" name="polog_crimedesc" placeholder="Describe the crime" ></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="polog-loc">Location</label>
+                            <input type="text" id="polog-loc" name="polog_loc" placeholder="Location of Crime" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="polog-pincode">Pincode</label>
+                            <input type="number" id="polog-pincode" name="polog_pincode" placeholder="Enter the Pincode" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="polog-date">Date</label>
+                            <input type="date" id="polog-date" name="polog_date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="polog-time">Time</label>
+                            <input type="time" id="polog-time" name="polog_time" required>
+                        </div>
+                    </fieldset>
+                </details>
+
+                <!-- Victim Information Section -->
+                <details class="toggle-section">
+                    <summary>Victim Information</summary>
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="polog-vname">Victim Name</label>
+                            <input type="text" id="polog-vname" name="polog_vname" placeholder="Enter Victim Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="polog-vphone">Victim Phone Number</label>
+                            <input type="tel" id="polog-vphone" name="polog_vphone" placeholder="Enter Victim Phone Number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="polog-vaddress">Victim Address</label>
+                            <textarea id="polog-vaddress" name="polog_vaddress" placeholder="Enter Victim Address" required></textarea>
+                        </div>
+                    </fieldset>
+                </details>
+
+                <!-- Criminal Information Section -->
+                <details class="toggle-section">
+                    <summary>Criminal Information</summary>
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="polog-cadhaarnum">Criminal Aadhaar Number</label>
+                            <input type="number" id="polog-cadhaarnum" name="polog_cadhaarnum" placeholder="Enter Criminal Aadhaar Number" >
+                            <button type="button" id="check-criminal-btn" class="btn">Check Criminal</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="polog-cid">Criminal ID</label>
+                            <input type="number" id="polog-cid" name="polog_cid" placeholder="Enter Criminal ID" >
+                        </div>
+                        <div class="form-group">
+                            <label for="polog-cname">Criminal Name</label>
+                            <input type="text" id="polog-cname" name="polog_cname" placeholder="Enter Criminal Name" >
+                        </div>
+                    </fieldset>
+                </details>
+
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="success-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000;">
+        <div style="position: relative; margin: 15% auto; padding: 20px; background: white; width: 300px; text-align: center; border-radius: 5px;">
+            <h2>Success!</h2>
+            <p id="success-message"></p>
+            <button onclick="document.getElementById('success-modal').style.display='none'">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to ensure only one details section is open at a time
+        const toggleSections = document.querySelectorAll('.toggle-section');
+
+        toggleSections.forEach(section => {
+            section.addEventListener('toggle', () => {
+                if (section.open) {
+                    toggleSections.forEach(otherSection => {
+                        if (otherSection !== section) {
+                            otherSection.open = false;
+                        }
+                    });
+                }
+            });
+        });
+
+        document.getElementById('check-criminal-btn').addEventListener('click', () => {
+        const aadhaarNumber = document.getElementById('polog-cadhaarnum').value;
+        console.log('Aadhaar Number to be sent:', aadhaarNumber);
+
+        if (!aadhaarNumber) {
+            alert('Please enter an Aadhaar number');
+            return;
+        }
+
+        fetch('http://localhost:3000/check-criminal', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ aadhaar: aadhaarNumber.toString().trim() })
+        })
+        .then(response => {
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.json();  // Ensures only valid JSON is parsed
+})
+        .then(data => {
+            if (data.found) {
+                document.getElementById('polog-cid').value = data.id;
+                document.getElementById('polog-cname').value = data.name;
+            } else {
+                alert('Criminal not found. You can add a new criminal.');
+                document.getElementById('polog-cid').value = '';
+                document.getElementById('polog-cname').value = '';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while checking the criminal.');
+        });
+    });
+
+    document.getElementById('crime-form').addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent default form submission
+
+    const formData = {
+        polog_pid: document.getElementById('polog-pid').value,
+        polog_pname: document.getElementById('polog-pname').value,
+        polog_crimetype: document.getElementById('polog-crimetype').value,
+        polog_crimedesc: document.getElementById('polog-crimedesc').value,
+        polog_loc: document.getElementById('polog-loc').value,
+        polog_pincode: document.getElementById('polog-pincode').value,
+        polog_date: document.getElementById('polog-date').value,
+        polog_time: document.getElementById('polog-time').value,
+        polog_vname: document.getElementById('polog-vname').value,
+        polog_vphone: document.getElementById('polog-vphone').value,
+        polog_vaddress: document.getElementById('polog-vaddress').value,
+        polog_cadhaarnum: document.getElementById('polog-cadhaarnum').value,
+        polog_cid: document.getElementById('polog-cid').value,
+        polog_cname: document.getElementById('polog-cname').value
+    };
+
+    fetch('http://localhost:3000/submit', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        document.getElementById('success-message').innerText = data.message; // Set the success message
+        document.getElementById('success-modal').style.display = 'block'; // Show the modal
+        this.reset(); // Optionally, clear the form fields
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while registering the crime.');
+    });
+});
+
+</script>
+</body>
+</html>
