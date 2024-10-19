@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heatmap with Crime Incidents</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+
+  <style>
+    #map {
+      height: 700px;
+      width: 100%;
+    }
+    body {
+      display: flex;
+      margin: 0;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+    #sidebar {
+      width: 250px;
+      background: #f8f9fa;
+      padding: 15px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      overflow-y: auto;
+    }
+    #sidebar h2 {
+      margin-top: 0;
+      font-size: 1.5em;
+    }
+    #sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+    #sidebar ul li {
+      padding: 10px;
+      cursor: pointer;
+    }
+    #sidebar ul li:hover {
+      background: #e2e6ea;
+    }
+    .footer {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="sidebar">
+    <h2>Crime Analysis</h2>
+    <ul>
+      <li><a href="index.html">Crime Hotspot Analysis</a></li>
+      <li>Predictive Crime Analysis</li>
+      <li><a href="incidance.html">Incident Mapping</a></li>
+      <li><a href="realtime.html">Real-time Alerts</a></li>
+      <li><a href="policeForm.html">Register New Crime</a></li>
+      <li>Criminal Behavior Patterns</li>
+    </ul>
+    <h2>Settings</h2>
+    <ul>
+      <li>Profile</li>
+      <li>Settings</li>
+      <li>Help</li>
+      <li>About</li>
+    </ul>
+  </div>  
+
+  <div class="container mt-4">
+    <h1 class="text-center">Incidence Mapping with Heatmap</h1>
+    
+    <!-- Row for map -->
+    <div class="row">
+      <div class="col-md-12">
+        <div id="map"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+
+  <script>
+    // Initialize the map
+    var map = L.map('map').setView([19.0760, 72.8777], 12);  // Centered on Mumbai
+
+    // Add OpenStreetMap tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Function to get intensity from GeoJSON
+    function getIntensityFromFeature(feature) {
+      return feature.properties.intensity || 0.5;  // Default to 0.5 if no intensity provided
+    }
+
+    // Create an array to store heatmap data points
+    var heatmapPoints = [];
+
+    // Fetch the crime GeoJSON data
+    fetch('predictive.geojson')  // Ensure this file is in the correct location
+      .then(response => response.json())
+      .then(data => {
+        // Loop through each feature (crime point) in the GeoJSON
+        data.features.forEach(function(feature) {
+          var coordinates = feature.geometry.coordinates;
+          var intensity = getIntensityFromFeature(feature);
+          heatmapPoints.push([coordinates[1], coordinates[0], intensity]);  // Leaflet uses lat-lng, not lng-lat
+        });
+
+        // Create the heatmap layer
+        var heat = L.heatLayer(heatmapPoints, {
+          radius: 25,     // Adjust the radius for the heatmap
+          blur: 15,       // Blurring for smoother heatmap transitions
+          maxZoom: 17,    // Maximum zoom level to display heatmap
+          max: 1.0        // Maximum intensity for the heatmap
+        }).addTo(map);
+      })
+      .catch(error => console.error('Error loading GeoJSON for heatmap:', error));
+  </script>
+
+</body>
+</html>
